@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Payment Status
+    </title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+
+            margin: 0;
+
+            min-height: 100vh;
+
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Arial,
+                sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #eef2ff 0%,
+                    #f8fafc 50%,
+                    #eef2ff 100%
+                );
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 20px;
+
+        }
+
+
+        /* ===============================================
+           MAIN CONTAINER
+        =============================================== */
+
+        .payment-container {
+
+            width: 100%;
+
+            max-width: 480px;
+
+        }
+
+
+        /* ===============================================
+           CARD
+        =============================================== */
+
+        .payment-card {
+
+            background: #ffffff;
+
+            border-radius: 26px;
+
+            padding: 38px 30px;
+
+            text-align: center;
+
+            box-shadow:
+                0 25px 70px
+                rgba(15, 23, 42, 0.12);
+
+            animation:
+                cardAppear 0.5s ease;
+
+        }
+
+
+        @keyframes cardAppear {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                    translateY(20px)
+                    scale(0.97);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    translateY(0)
+                    scale(1);
+
+            }
+
+        }
+
+
+        /* ===============================================
+           SUCCESS ICON
+        =============================================== */
+
+        .success-icon {
+
+            width: 90px;
+
+            height: 90px;
+
+            margin:
+                0 auto 24px;
+
+            border-radius: 50%;
+
+            background: #dcfce7;
+
+            color: #16a34a;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 48px;
+
+            font-weight: 700;
+
+            box-shadow:
+                0 0 0 10px #f0fdf4;
+
+        }
+
+
+        /* ===============================================
+           FAILED ICON
+        =============================================== */
+
+        .failed-icon {
+
+            width: 90px;
+
+            height: 90px;
+
+            margin:
+                0 auto 24px;
+
+            border-radius: 50%;
+
+            background: #fee2e2;
+
+            color: #dc2626;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 48px;
+
+            font-weight: 700;
+
+            box-shadow:
+                0 0 0 10px #fef2f2;
+
+        }
+
+
+        /* ===============================================
+           TITLE
+        =============================================== */
+
+        h1 {
+
+            margin: 0;
+
+            color: #111827;
+
+            font-size: 28px;
+
+            font-weight: 700;
+
+        }
+
+
+        /* ===============================================
+           MESSAGE
+        =============================================== */
+
+        .message {
+
+            margin:
+                12px auto 0;
+
+            max-width: 370px;
+
+            color: #6b7280;
+
+            font-size: 15px;
+
+            line-height: 1.6;
+
+        }
+
+
+        /* ===============================================
+           PAYMENT DETAILS
+        =============================================== */
+
+        .details {
+
+            margin-top: 28px;
+
+            padding: 8px 18px;
+
+            background: #f8fafc;
+
+            border-radius: 18px;
+
+            border:
+                1px solid #e5e7eb;
+
+            text-align: left;
+
+        }
+
+
+        .detail-row {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 20px;
+
+            padding: 13px 0;
+
+            border-bottom:
+                1px solid #e5e7eb;
+
+        }
+
+
+        .detail-row:last-child {
+
+            border-bottom: none;
+
+        }
+
+
+        .label {
+
+            color: #6b7280;
+
+            font-size: 13px;
+
+            white-space: nowrap;
+
+        }
+
+
+        .value {
+
+            color: #111827;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            text-align: right;
+
+            word-break: break-word;
+
+        }
+
+
+        /* ===============================================
+           AMOUNT
+        =============================================== */
+
+        .amount {
+
+            color: #16a34a;
+
+            font-size: 21px;
+
+            font-weight: 700;
+
+        }
+
+
+        /* ===============================================
+           SHOP BUTTON
+        =============================================== */
+
+        .shop-button {
+
+            display: block;
+
+            width: 100%;
+
+            margin-top: 28px;
+
+            padding: 15px 20px;
+
+            border-radius: 13px;
+
+            background: #111827;
+
+            color: #ffffff;
+
+            text-decoration: none;
+
+            font-size: 16px;
+
+            font-weight: 600;
+
+            transition:
+                transform 0.2s ease,
+                background 0.2s ease,
+                box-shadow 0.2s ease;
+
+        }
+
+
+        .shop-button:hover {
+
+            background: #000000;
+
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 10px 25px
+                rgba(0, 0, 0, 0.15);
+
+        }
+
+
+        .shop-button:active {
+
+            transform:
+                translateY(0);
+
+        }
+
+
+        /* ===============================================
+           FAILED BUTTON
+        =============================================== */
+
+        .try-button {
+
+            display: block;
+
+            width: 100%;
+
+            margin-top: 28px;
+
+            padding: 15px 20px;
+
+            border-radius: 13px;
+
+            background: #111827;
+
+            color: #ffffff;
+
+            text-decoration: none;
+
+            font-size: 16px;
+
+            font-weight: 600;
+
+            transition:
+                transform 0.2s ease,
+                background 0.2s ease;
+
+        }
+
+
+        .try-button:hover {
+
+            background: #000000;
+
+            transform:
+                translateY(-2px);
+
+        }
+
+
+        /* ===============================================
+           SECURITY TEXT
+        =============================================== */
+
+        .secure-text {
+
+            margin-top: 18px;
+
+            color: #9ca3af;
+
+            font-size: 12px;
+
+        }
+
+
+        /* ===============================================
+           MOBILE
+        =============================================== */
+
+        @media (max-width: 480px) {
+
+            body {
+
+                padding: 12px;
+
+            }
+
+
+            .payment-card {
+
+                padding:
+                    32px 20px;
+
+                border-radius: 22px;
+
+            }
+
+
+            h1 {
+
+                font-size: 24px;
+
+            }
+
+
+            .success-icon,
+            .failed-icon {
+
+                width: 78px;
+
+                height: 78px;
+
+                font-size: 40px;
+
+            }
+
+
+            .details {
+
+                padding:
+                    5px 14px;
+
+            }
+
+
+            .detail-row {
+
+                gap: 10px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="payment-container">
+
+
+    <div class="payment-card">
+
+
+        {% if status == "success" %}
+
+        <!-- =================================================
+             SUCCESS
+        ================================================== -->
+
+        <div class="success-icon">
+
+            ✓
+
+        </div>
+
+
+        <h1>
+
+            Payment Successful
+
+        </h1>
+
+
+        <p class="message">
+
+            Your payment has been completed
+            successfully.
+
+        </p>
+
+
+        <!-- =================================================
+             PAYMENT DETAILS
+        ================================================== -->
+
+        <div class="details">
+
+
+            {% if order %}
+
+            <div class="detail-row">
+
+                <span class="label">
+
+                    Order ID
+
+                </span>
+
+                <span class="value">
+
+                    {{ order.id }}
+
+                </span>
+
+            </div>
+
+            {% endif %}
+
+
+            <div class="detail-row">
+
+                <span class="label">
+
+                    Paytm Order
+
+                </span>
+
+                <span class="value">
+
+                    {{ paytm_order_id }}
+
+                </span>
+
+            </div>
+
+
+            {% if transaction_id %}
+
+            <div class="detail-row">
+
+                <span class="label">
+
+                    Transaction ID
+
+                </span>
+
+                <span class="value">
+
+                    {{ transaction_id }}
+
+                </span>
+
+            </div>
+
+            {% endif %}
+
+
+            {% if payment_mode %}
+
+            <div class="detail-row">
+
+                <span class="label">
+
+                    Payment Mode
+
+                </span>
+
+                <span class="value">
+
+                    {{ payment_mode }}
+
+                </span>
+
+            </div>
+
+            {% endif %}
+
+
+            <div class="detail-row">
+
+                <span class="label">
+
+                    Amount
+
+                </span>
+
+                <span class="value amount">
+
+                    ₹{{ amount }}
+
+                </span>
+
+            </div>
+
+
+            <div class="detail-row">
+
+                <span class="label">
+
+                    Status
+
+                </span>
+
+                <span
+                    class="value"
+                    style="color:#16a34a;"
+                >
+
+                    Paid
+
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =================================================
+             ONLY CLICK REDIRECT
+        ================================================== -->
+
+        <a
+            href="https://vedanmart.com/shop"
+            class="shop-button"
+        >
+
+            Continue to Shop
+
+        </a>
+
+
+        <div class="secure-text">
+
+            🔒 Payment processed securely by Paytm
+
+        </div>
+
+
+        {% elif status == "failed" %}
+
+
+        <!-- =================================================
+             FAILED
+        ================================================== -->
+
+        <div class="failed-icon">
+
+            ×
+
+        </div>
+
+
+        <h1>
+
+            Payment Failed
+
+        </h1>
+
+
+        <p class="message">
+
+            {{ message|default:"Your payment could not be completed." }}
+
+        </p>
+
+
+        <!-- =================================================
+             FAILED DETAILS
+        ================================================== -->
+
+        <div class="details">
+
+
+            {% if order %}
+
+            <div class="detail-row">
+
+                <span class="label">
+
+                    Order ID
+
+                </span>
+
+                <span class="value">
+
+                    {{ order.id }}
+
+                </span>
+
+            </div>
+
+            {% endif %}
+
+
+            {% if paytm_order_id %}
+
+            <div class="detail-row">
+
+                <span class="label">
+
+                    Paytm Order
+
+                </span>
+
+                <span class="value">
+
+                    {{ paytm_order_id }}
+
+                </span>
+
+            </div>
+
+            {% endif %}
+
+
+            {% if transaction_id %}
+
+            <div class="detail-row">
+
+                <span class="label">
+
+                    Transaction ID
+
+                </span>
+
+                <span class="value">
+
+                    {{ transaction_id }}
+
+                </span>
+
+            </div>
+
+            {% endif %}
+
+
+            {% if amount %}
+
+            <div class="detail-row">
+
+                <span class="label">
+
+                    Amount
+
+                </span>
+
+                <span class="value">
+
+                    ₹{{ amount }}
+
+                </span>
+
+            </div>
+
+            {% endif %}
+
+
+            {% if result_code %}
+
+            <div class="detail-row">
+
+                <span class="label">
+
+                    Response Code
+
+                </span>
+
+                <span class="value">
+
+                    {{ result_code }}
+
+                </span>
+
+            </div>
+
+            {% endif %}
+
+
+            <div class="detail-row">
+
+                <span class="label">
+
+                    Status
+
+                </span>
+
+                <span
+                    class="value"
+                    style="color:#dc2626;"
+                >
+
+                    Failed
+
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =================================================
+             USER CLICK REDIRECT
+        ================================================== -->
+
+        <a
+            href="https://vedanmart.com/shop"
+            class="try-button"
+        >
+
+            Return to Shop
+
+        </a>
+
+
+        <div class="secure-text">
+
+            Payment status was received from Paytm
+
+        </div>
+
+
+        {% else %}
+
+
+        <!-- =================================================
+             UNKNOWN / PROCESSING
+        ================================================== -->
+
+        <div class="success-icon">
+
+            …
+
+        </div>
+
+
+        <h1>
+
+            Processing Payment
+
+        </h1>
+
+
+        <p class="message">
+
+            Please wait while we process
+            your payment.
+
+        </p>
+
+
+        <a
+            href="https://vedanmart.com/shop"
+            class="shop-button"
+        >
+
+            Continue to Shop
+
+        </a>
+
+
+        {% endif %}
+
+
+    </div>
+
+</div>
+
+
+</body>
+
+</html>

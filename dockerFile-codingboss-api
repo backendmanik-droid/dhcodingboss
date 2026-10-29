@@ -1,0 +1,59 @@
+
+# Debian-based Python image (correct for apt)
+FROM python:3.11-bookworm
+
+
+# --------------------
+# Environment
+# --------------------
+ARG BUILD_TIMESTAMP
+ENV BUILD_TIMESTAMP=${BUILD_TIMESTAMP}
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+# --------------------
+# System dependencies
+# --------------------
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    make \
+    default-libmysqlclient-dev \
+    libffi-dev \
+    pkg-config \
+    ca-certificates \
+    curl \
+    openjdk-17-jdk-headless \
+    && rm -rf /var/lib/apt/lists/*
+
+# --------------------
+# Set JAVA_HOME
+# --------------------
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
+
+
+# --------------------
+# Python dependencies
+# --------------------
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# --------------------
+# App files
+# --------------------
+COPY deployment/scripts/entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
+COPY . .
+
+# --------------------
+# Runtime
+# --------------------
+EXPOSE 8080
+
+ENTRYPOINT ["/app/entrypoint.sh"]
+# CMD ["gunicorn", "Quiz.wsgi:application", "--bind", "0.0.0.0:8080", "--workers", "3", "--threads", "10", "--worker-class", "gthread", "--timeout", "60"]
+CMD ["gunicorn", "Quiz.wsgi:application", "--bind", "0.0.0.0:8080", "--workers", "3", "--threads", "10", "--worker-class", "gthread", "--timeout", "60"]

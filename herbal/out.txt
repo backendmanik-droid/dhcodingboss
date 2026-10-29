@@ -1,0 +1,97 @@
+def api_home(request):
+    return JsonResponse({
+        "message": "Welcome to Dharani Herbals API v3.0",
+        "version": "3.0",
+        "authentication": {
+            "POST /api/register/": "Customer Registration",
+            "POST /api/login/": "Customer Login",
+            "POST /api/store/register/": "Staff Registration",
+            "POST /api/store/login/": "Staff Login",
+            "POST /api/logout/": "Logout"
+        },
+        
+    
+        "products": {
+            "GET /api/products/": "List Products",
+            "POST /api/products/": "Add Product",
+            "GET /api/products/{id}/": "View Product",
+            "PUT /api/products/{id}/": "Edit Product",
+            "DELETE /api/products/{id}/": "Delete Product",
+            "GET /api/products/{id}/print/": "Print Product"
+        },
+        "categories": {
+            "GET /api/categories/": "List Categories",
+            "POST /api/categories/": "Add Category",
+            "GET /api/categories/{id}/": "View Category",
+            "PUT /api/categories/{id}/": "Edit Category",
+            "DELETE /api/categories/{id}/": "Delete Category"
+        },
+        "brands": {
+            "GET /api/brands/": "List Brands",
+            "POST /api/brands/": "Add Brand",
+            "GET /api/brands/{id}/": "View Brand",
+            "PUT /api/brands/{id}/": "Edit Brand",
+            "DELETE /api/brands/{id}/": "Delete Brand"
+        },
+        "sliders": {
+            "GET /api/sliders/": "List Sliders",
+            "POST /api/sliders/": "Add Slider",
+            "GET /api/sliders/{id}/": "View Slider",
+            "PUT /api/sliders/{id}/": "Edit Slider",
+            "DELETE /api/sliders/{id}/": "Delete Slider"
+        },
+        "customers": {
+            "GET /api/customers/": "List Customers",
+            "POST /api/customers/": "Add Customer",
+            "GET /api/customers/{id}/": "View Customer",
+            "PUT /api/customers/{id}/": "Edit Customer",
+            "DELETE /api/customers/{id}/": "Delete Customer",
+            "GET /api/customers/{id}/print/": "Print Customer"
+        },
+        "cart": {
+            "GET /api/cart/": "View Cart",
+            "POST /api/cart/": "Add To Cart",
+            "PUT /api/cart/{id}/": "Update Cart",
+            "DELETE /api/cart/{id}/": "Remove Item",
+            "DELETE /api/cart/clear/{user_id}/": "Clear Cart"
+        },
+        "orders": {
+            "GET /api/orders/": "List Orders",
+            "POST /api/orders/": "Create Order",
+            "GET /api/orders/{id}/": "View Order",
+            "PUT /api/orders/{id}/": "Update Order",
+            "DELETE /api/orders/{id}/": "Delete Order",
+            "GET /api/orders/{id}/track/": "Track Order",
+            "GET /api/orders/{id}/bill/": "Bill",
+            "GET /api/orders/{id}/invoice/": "Invoice",
+            "GET /api/orders/{id}/quotation/": "Quotation",
+            "GET /api/orders/{id}/print-bill/": "Print Bill",
+            "GET /api/orders/{id}/print-invoice/": "Print Invoice",
+            "GET /api/orders/{id}/print-quotation/": "Print Quotation"
+        },
+        "inventory": {
+            "GET /api/inventory/": "List Inventory",
+            "POST /api/inventory/": "Add Inventory",
+            "PUT /api/inventory/{id}/": "Update Inventory",
+            "DELETE /api/inventory/{id}/": "Remove Inventory"
+        },
+        "notifications": {
+            "POST /api/notifications/email/": "Send Email",
+            "POST /api/notifications/whatsapp/": "Send WhatsApp",
+            "POST /api/notifications/festival/": "Send Festival Notification",
+            "GET /api/notifications/": "List Notifications",
+            "GET /api/notifications/{id}/": "View Notification"
+        },
+        "reports": {
+            "GET /api/reports/sales/": "Sales Report",
+            "GET /api/reports/orders/": "Orders Report",
+            "GET /api/reports/customers/": "Customers Report",
+            "GET /api/reports/products/": "Products Report",
+            "GET /api/reports/inventory/": "Inventory Report"
+        },
+        "translation": {
+            "POST /api/translation/translate/": "Translate Text (Tamil ↔ English)",
+            "POST /api/translation/product/{id}/translate/": "Auto-Translate Single Product Name → Tamil",
+            "POST /api/translation/products/bulk-translate/": "Bulk Auto-Translate All Products → Tamil"
+        }
+    })

@@ -1,0 +1,191 @@
+@base_url = http://127.0.0.1:8000/api/v1
+# @Content-Type= application/json
+@employee_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY3NzgwMDA3LCJpYXQiOjE3Njc3MzY4MDcsImp0aSI6ImMwMzA4YWQwNzlhNzQ5MjI4ZjQ1MjA1YmQ2ODJmNzA4IiwiZW1wbG95ZWVfaWQiOjEsImVtcGxveWVlX2NvZGUiOiJFTVAwMDEiLCJ0eXBlIjoiZW1wbG95ZWUifQ.uy4vWH1YK_tp2InaOUYkqzMPEJKvrrYsAZYUVI0fGHw
+@admin_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY4MTc4MjIyLCJpYXQiOjE3NjgxMzUwMjIsImp0aSI6IjJiZDhhNDk0N2JlMzQ1NWE5ODQ4MWIwZjc3YTIxYzIzIiwidXNlcl9pZCI6MX0.W4rdmzjN4ixG4MMoXscvZjpg059VO7GrheDMRgRRP0g
+POST {{base_url}}/auth/login/
+Content-Type: application/json
+
+# Authorization: Bearer 
+
+{
+  "email": "admin@gmail.com",
+  "password": "admin"
+}
+
+
+###
+POST {{base_url}}/admin/employees/
+Content-Type: application/json
+Authorization: Bearer {{admin_token}}
+
+{
+  "employee_code": "EMP004",
+  "full_name": "Employee four",
+  "pin": "112001"
+}
+
+
+###
+GET {{base_url}}/admin/employees/
+Content-Type: application/json
+Authorization: Bearer {{admin_token}}
+
+###
+POST {{base_url}}/employee/verify-pin/
+
+
+
+
+###
+POST {{base_url}}/employee/login/
+Content-Type: application/json
+
+{
+  "employee_code": "EMP001",
+  "pin": "000000"
+}
+
+
+###
+PATCH {{base_url}}/admin/employees/1/pin/
+Content-Type: application/json
+Authorization: Bearer {{admin_token}}
+
+{
+  "user_id":1,
+  "pin": "654321"
+}
+
+
+###
+POST {{base_url}}/admin/service-categories/
+Content-Type: application/json
+Authorization: Bearer {{admin_token}}
+
+{
+  "root": "men",
+  "name": "Beard"
+}
+
+
+###
+POST {{base_url}}/admin/services/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY4MzY2MjkwLCJpYXQiOjE3NjgzMjMwOTAsImp0aSI6ImIyMTAwNzU5OWMxZjQ1ODY5YjM0M2I0YmQ4ZTJiZjJhIiwidXNlcl9pZCI6MX0.O20y1GnMJ03dZByjOzoxzZBL-z809fMmK5zS-QAN2wA
+
+
+{
+  "category": 4,
+  "name": "Beard shape",
+  "base_price": 300
+  # "discount_percent": 10
+}
+
+####
+GET {{base_url}}/employee/services/?root=women
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY4NTQzMDM0LCJpYXQiOjE3Njg0OTk4MzQsImp0aSI6IjliZmZjZTU5Y2UyMDRlODI5MzNkMzY4MmU2OGQ3NjY1IiwiZW1wbG95ZWVfaWQiOjgsImVtcGxveWVlX2NvZGUiOiJFTVAwMDEiLCJ0eXBlIjoiZW1wbG95ZWUifQ.dlwk-yN4_UYzhR9SBeStcv_iB4WGitKGrJYf977TwyE
+
+###
+POST {{base_url}}/employee/appointments/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY4MzcwMDM0LCJpYXQiOjE3NjgzMjY4MzQsImp0aSI6ImYyZmJhOTNlYTA1MDQwNTA4YzgwYjA1Y2M0ZWMzMDlkIiwiZW1wbG95ZWVfaWQiOjQsImVtcGxveWVlX2NvZGUiOiJFTVAwMDQiLCJ0eXBlIjoiZW1wbG95ZWUifQ.VlBEODSkkJfnN84UTPyAVBbE09uNtnDoBqMyRmdxZT8
+
+
+{
+  "customer_name": "Joo",
+  "customer_phone": "588556663",
+
+  "appointment_date": "2026-01-07",
+  "appointment_time": "23:17",
+
+  "services": [1, 3,4],
+
+  "promo_code": "WELCOME20"
+}
+
+
+
+###
+GET {{base_url}}/reports/revenue/?period=daily
+Content-Type: application/json
+Authorization: Bearer {{admin_token}}
+
+
+###
+GET {{base_url}}/employees/3/appointments/
+Content-Type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY4MTc3MjQ0LCJpYXQiOjE3NjgxMzQwNDQsImp0aSI6IjZhNmNlYjFmYjI0MTRlMmJiMjlhMjdiYTFkMTVlOGIyIiwiZW1wbG95ZWVfaWQiOjMsImVtcGxveWVlX2NvZGUiOiJFTVAwMDMiLCJ0eXBlIjoiZW1wbG95ZWUifQ.ne9GkKxVOJvZ_a-ZjIXykHaMekuHCBKYy3H_M_QZ9Gc
+
+
+
+###
+GET {{base_url}}/admin/appointments/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY4MzQ0MTEyLCJpYXQiOjE3NjgzMDA5MTIsImp0aSI6Ijg0OTJiOWVlNTQ3MjQxZjc5YmM0MDE2OGE1YjQxYzhkIiwidXNlcl9pZCI6MX0.qu1n0RY1JORE5ao06j9A6qMduri5S3EeuT4WZAZ1sHk
+
+
+###
+POST {{base_url}}/promo-codes/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY5MDYwNzM5LCJpYXQiOjE3NjkwNjA0MzksImp0aSI6ImE5MTk4NWVjNDRkMjQ5ODY5MjEzNjg5ZTkyNDcxM2Y3IiwidXNlcl9pZCI6MX0._74mIQeCf1E38pUwp0Ll3U2vnubjLHQgemQtdUGQ7aE
+
+{
+  "code": "WELCOME20",
+  "discount": 20,
+  "is_active": true
+}
+
+
+
+###
+PATCH {{base_url}}/admin/services/8/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY5MDYwNzM5LCJpYXQiOjE3NjkwNjA0MzksImp0aSI6ImE5MTk4NWVjNDRkMjQ5ODY5MjEzNjg5ZTkyNDcxM2Y3IiwidXNlcl9pZCI6MX0._74mIQeCf1E38pUwp0Ll3U2vnubjLHQgemQtdUGQ7aE
+
+
+{
+
+  "name": "Premium Hair Cut",
+  "base_price": 7000
+}
+
+
+
+###
+PATCH {{base_url}}/admin/services/8/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY4MzQ2OTM5LCJpYXQiOjE3NjgzMDM3MzksImp0aSI6ImNlZTQzYmU2NzMzMDQ1ZjA4ZGNmMDBmMzYzM2Y4NzNjIiwidXNlcl9pZCI6MX0.lUZfU8kRPPCKq1qKkC7cuM8N-iDyO5rgC-cI8629iXc
+
+
+{
+  "is_active":"False"
+}
+
+
+
+####
+PATCH {{base_url}}/admin/services/8/soft-delete/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY4MzY2MjkwLCJpYXQiOjE3NjgzMjMwOTAsImp0aSI6ImIyMTAwNzU5OWMxZjQ1ODY5YjM0M2I0YmQ4ZTJiZjJhIiwidXNlcl9pZCI6MX0.O20y1GnMJ03dZByjOzoxzZBL-z809fMmK5zS-QAN2wA
+
+
+
+###
+GET {{base_url}}/promos/validate/?code=GLOW20
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY4MzcxNDk3LCJpYXQiOjE3NjgzMjgyOTcsImp0aSI6ImQ4NjQyYjNmNzQyNTQ5NDc4NmQ2ZjgwMzNlMzlkMjhlIiwiZW1wbG95ZWVfaWQiOjcsImVtcGxveWVlX2NvZGUiOiJFTVAwMDciLCJ0eXBlIjoiZW1wbG95ZWUifQ.C49i509Qmep_3MU3e8hcC_-Z8knuzrs1KmurOTKy0Ms
+
+
+
+####
+PATCH {{base_url}}/promo-codes/10/
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY4NDI1NDgyLCJpYXQiOjE3NjgzODIyODIsImp0aSI6IjUxYzdlZjdmZDk4YzQyZDJiYjk0MmM5NTUzNmEyNDg0IiwidXNlcl9pZCI6Mn0.pCH9_T9fjOZvA_aLWEJW3pcUCtrwpO8MmxSeFzHlx4U
+
+
+{
+  "is_active": false
+}
+
+
