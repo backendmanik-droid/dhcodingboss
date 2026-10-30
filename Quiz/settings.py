@@ -124,6 +124,7 @@ ALLOWED_HOSTS = [
     "erp.dharaniherbbals.in",
     "crmerp.dharaniherbbals.in",
     "cland.southindia.cloudapp.azure.com",
+    "179.197.251.47"
     
 ]
 
@@ -149,6 +150,7 @@ CORS_ALLOW_HEADERS = [
 
 CSRF_TRUSTED_ORIGINS = [
     "https://codingboss.in",
+    "http://179.197.251.47",
     "https://www.codingboss.in",
     "https://api.codingboss.in",
     "http://localhost:5173",
@@ -183,6 +185,7 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
+    "http://179.197.251.47",
     "https://dharaniherbbals.in",
     "https://erp.dharaniherbbals.in",
     "https://crmerp.dharaniherbbals.in",
