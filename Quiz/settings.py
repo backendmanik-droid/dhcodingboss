@@ -119,12 +119,13 @@ ALLOWED_HOSTS = [
     "gobi360",
     "ramcare.in",
     "crm.ramcare.in",
-    "api.prod.payglocal.in"
+    "api.prod.payglocal.in",
     "dharaniherbbals.in",
     "erp.dharaniherbbals.in",
     "crmerp.dharaniherbbals.in",
     "cland.southindia.cloudapp.azure.com",
-    "179.197.251.47"
+    "179.197.251.47",
+    "179.197.251.47:30080",
     
 ]
 
@@ -149,6 +150,7 @@ CORS_ALLOW_HEADERS = [
 
 
 CSRF_TRUSTED_ORIGINS = [
+    
     "https://codingboss.in",
     "http://179.197.251.47",
     "https://www.codingboss.in",
