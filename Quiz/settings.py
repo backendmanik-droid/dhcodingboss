@@ -154,7 +154,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://codingboss.in",
     "http://179.197.251.47",
     "https://www.codingboss.in",
-    "https://api.codingboss.in",
+    "http://179.197.251.47:30080",
     "http://localhost:5173",
     "http://localhost:5174",
     "https://www.raanuvaveeranspokenhindiacademy.com",
@@ -200,7 +200,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://store.rubywellnesscenter.com",
     "https://codingboss.in",
     "https://www.codingboss.in",
-    "https://api.codingboss.in",
+    "http://179.197.251.47:30080",
     "http://api.codingboss.in",
     "http://api.codingboss.in",
     "https://www.codingboss.in",
@@ -508,7 +508,7 @@ else:
     CASHFREE_BASE_URL = "https://sandbox.cashfree.com/pg/orders"
 
 # Webhook Endpoint
-CASHFREE_WEBHOOK_URL = "https://api.codingboss.in/kovais/payment/webhook/"
+CASHFREE_WEBHOOK_URL = "http://179.197.251.47:30080/kovais/payment/webhook/"
 
 
 
@@ -660,7 +660,7 @@ PAYTM_CHANNEL_ID = "WEB"
 
 PAYTM_CHANNEL_ID_MOBILE = "WAP"
 
-PAYTM_CALLBACK_URL = ("https://api.codingboss.in/herbal/paytm/callback/")
+PAYTM_CALLBACK_URL = ("http://179.197.251.47:30080/herbal/paytm/callback/")
 
 PAYTM_INITIATE_URL = ("https://secure.paytmpayments.com/theia/api/v1/initiateTransaction")
 

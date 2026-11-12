@@ -68,7 +68,7 @@ class CartVariationSerializer(serializers.ModelSerializer):
             try:
                 if request:
                     return request.build_absolute_uri(image.url)
-                return f"https://api.codingboss.in{image.url}"
+                return f"http://179.197.251.47:30080{image.url}"
             except Exception:
                 pass
 
@@ -245,7 +245,7 @@ class WishlistSerializer(serializers.ModelSerializer):
             try:
                 if request:
                     return request.build_absolute_uri(image.url)
-                return f"https://api.codingboss.in{image.url}"
+                return f"http://179.197.251.47:30080{image.url}"
             except Exception:
                 pass
 
@@ -262,4 +262,4 @@ class WishlistSerializer(serializers.ModelSerializer):
             if image_str.startswith("/"):
                 return request.build_absolute_uri(image_str)
             return request.build_absolute_uri(f"/media/{image_str}")
-        return f"https://api.codingboss.in/media/{image_str}"
+        return f"http://179.197.251.47:30080/media/{image_str}"

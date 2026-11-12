@@ -161,7 +161,7 @@ def get_image_url(request, image_field):
         except Exception:
             pass
         if hasattr(image_field, 'url'):
-            return f"https://api.codingboss.in{image_field.url}"
+            return f"http://179.197.251.47:30080{image_field.url}"
     return None
 
 def get_role(request):
@@ -14092,7 +14092,7 @@ def payglocal_create_payment(request):
         # =====================================================
 
         callback_url = (
-            "https://api.codingboss.in/"
+            "http://179.197.251.47:30080/"
             "herbal/payglocal/callback/"
         )
 
@@ -15560,7 +15560,7 @@ def payglocal_status(request):
 #         # YOUR DJANGO CALLBACK URL
 #         # --------------------------------------------------
     
-#         callback_url = "https://api.codingboss.in/herbal/payglocal/callback/"
+#         callback_url = "http://179.197.251.47:30080/herbal/payglocal/callback/"
     
 #         # --------------------------------------------------
 #         # PAYGLOCAL PAYLOAD
