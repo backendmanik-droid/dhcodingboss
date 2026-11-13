@@ -358,19 +358,24 @@ def crm_product_detail(request, pk):
             'batch_number': product.batch_number,
             'manufacturer': product.manufacturer,
             'image': get_image_url(request, product.image),
+            'extra_images': [
+                {'id': img.id, 'image': get_image_url(request, img.image)}
+                for img in product.extra_images.filter(is_active=True)
+            ],
             'is_new': product.is_new,
             'is_public': product.is_public,
             'status': 'active' if product.is_active else 'inactive',
             'created_at': product.created_at.isoformat()
         }, json_dumps_params={'ensure_ascii': False})
 
-    elif request.method == 'PUT':
+    elif request.method in ['PUT', 'POST']:
         # Temporarily bypassed for frontend testing: if not is_admin(request):
         #     return JsonResponse({'error': 'Unauthorized'}, status=403)
         try:
-
+            files = {}
             if request.content_type and "multipart/form-data" in request.content_type:
-                data = request.POST
+                from django.http.multipartparser import MultiPartParser
+                data, files = MultiPartParser(request.META, request, request.upload_handlers).parse()
             else:
                 try:
                     data = json.loads(request.body)
@@ -436,17 +441,16 @@ def crm_product_detail(request, pk):
                 if category:
                     product.category = category
 
-            print("CONTENT TYPE:", request.content_type)
-            print("FILES:", request.FILES)
-
-            image = request.FILES.get("image")
-            print("IMAGE:", image)
-
-            if image:
-                product.image = image
+            # Update Main Image
+            if 'image' in files and files['image']:
+                product.image = files['image']
+            elif request.FILES.get('image'):
+                product.image = request.FILES.get('image')
+            elif data.get('remove_image') in [True, 'true', '1'] or data.get('clear_image') in [True, 'true', '1'] or data.get('image') == '':
+                product.image = None
 
             product.save()
-            return JsonResponse({'message': 'Product updated successfully'})
+            return JsonResponse({'message': 'Product updated successfully', 'image': get_image_url(request, product.image)})
         except Exception as e:
             import traceback
             traceback.print_exc()
@@ -460,16 +464,26 @@ def crm_product_detail(request, pk):
 
 @csrf_exempt
 def crm_product_upload_image(request, pk):
+    product = get_object_or_404(Product, id=pk)
     if request.method == 'POST':
-        if not is_admin(request):
-            return JsonResponse({'error': 'Unauthorized'}, status=403)
-        product = get_object_or_404(Product, id=pk)
         image = request.FILES.get('image')
         if not image:
             return JsonResponse({'error': 'No image file uploaded'}, status=400)
         product.image = image
         product.save()
-        return JsonResponse({'message': 'Image uploaded successfully', 'url': get_image_url(request, product.image)})
+        return JsonResponse({
+            'success': True,
+            'message': 'Image uploaded successfully',
+            'url': get_image_url(request, product.image)
+        })
+    elif request.method == 'DELETE':
+        product.image = None
+        product.save()
+        return JsonResponse({
+            'success': True,
+            'message': 'Product main image removed successfully'
+        })
+    return JsonResponse({'error': 'Method not allowed'}, status=405)
     
 # =
 # PRODUCT VARIATION POST, GET

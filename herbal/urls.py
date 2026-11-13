@@ -49,6 +49,7 @@ urlpatterns = [
     # ================= PRODUCTS =================
     path('products/', customer_products),
     path('products/<int:pk>/', public_product_detail),
+    path('products/<int:pk>/upload-image/', crm_product_upload_image),
     path('category-products/<int:category_id>/', products_by_category),
     path('admin/dashboard/product/add/', dashboard_add_product),
     path('admin/dashboard/product/edit/<int:product_id>/', dashboard_edit_product),
@@ -228,5 +229,7 @@ urlpatterns = [
     path("payglocal/checkin/", payglocal_checkin, name="payglocal_checkin"),
 
     path("erp-proxy/",erp_proxy, name="erp_proxy"),
+
+    path('new-products/',new_products_api,name='new-products-api'),
 
 ]

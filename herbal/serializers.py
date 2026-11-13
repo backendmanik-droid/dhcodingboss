@@ -263,3 +263,12 @@ class WishlistSerializer(serializers.ModelSerializer):
                 return request.build_absolute_uri(image_str)
             return request.build_absolute_uri(f"/media/{image_str}")
         return f"http://179.197.251.47:30080/media/{image_str}"
+
+from rest_framework import serializers
+from .models import Product
+
+
+class NewProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = '__all__'

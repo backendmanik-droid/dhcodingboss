@@ -161,7 +161,9 @@ def get_image_url(request, image_field):
         except Exception:
             pass
         if hasattr(image_field, 'url'):
-            return f"http://179.197.251.47:30080{image_field.url}"
+            if request:
+                return request.build_absolute_uri(image_field.url)
+            return image_field.url
     return None
 
 def get_role(request):
@@ -16173,3 +16175,28 @@ def erp_proxy(request):
             },
             status=500,
         )
+    
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .models import Product
+from .serializers import NewProductSerializer
+
+
+@api_view(['GET'])
+def new_products_api(request):
+
+    products = Product.objects.filter(
+        is_new=True
+    ).order_by('-created_at')
+
+    serializer = NewProductSerializer(
+        products,
+        many=True,
+        context={'request': request}
+    )
+
+    return Response({
+        "status": True,
+        "count": len(serializer.data),
+        "data": serializer.data
+    })
