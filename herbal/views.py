@@ -691,24 +691,29 @@ def register(request):
                 expires_at=expires_at
             )
 
-            send_email_with_fallback(
-                subject="Dharani Herbals - Account Verification OTP",
-                message=f"""
-            Welcome to Dharani Herbals!
+            if email:
+                threading.Thread(
+                    target=send_email_with_fallback,
+                    kwargs={
+                        "subject": "Dharani Herbals - Account Verification OTP",
+                        "message": f"""
+Welcome to Dharani Herbals!
 
-            Dear {pending_user.name},
+Dear {pending_user.name},
 
-            Your One-Time Password (OTP) for account verification is:
+Your One-Time Password (OTP) for account verification is:
 
-            {otp}
+{otp}
 
-            This OTP is valid for 30 minutes.
+This OTP is valid for 30 minutes.
 
-            Regards,
-            Dharani Herbals Team
-            """,
-                recipient=email
-            )
+Regards,
+Dharani Herbals Team
+""",
+                        "recipient": email
+                    },
+                    daemon=True
+                ).start()
 
             threading.Thread(
                 target=send_sms_background,
@@ -2422,13 +2427,18 @@ def store_login(request):
                 purpose="forgot_password"
             )
 
-            send_sms_otp(user.mobile, otp)
+            threading.Thread(
+                target=send_sms_background,
+                args=(user.mobile, otp, "forgot_password"),
+                daemon=True
+            ).start()
 
             if user.email:
-
-                send_email_with_fallback(
-                    subject="Dharani Herbals - Login OTP",
-                    message=f"""
+                threading.Thread(
+                    target=send_email_with_fallback,
+                    kwargs={
+                        "subject": "Dharani Herbals - Login OTP",
+                        "message": f"""
 Dear {user.name},
 
 Your OTP is:
@@ -2440,8 +2450,10 @@ This OTP is valid for 30 minutes.
 Regards,
 Dharani Herbals
 """,
-                    recipient=user.email
-                )
+                        "recipient": user.email
+                    },
+                    daemon=True
+                ).start()
 
             return JsonResponse({
                 "success": True,
