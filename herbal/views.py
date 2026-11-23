@@ -6244,11 +6244,6 @@ Dharani Herbbals 💚"""
             else:
                 print(f"[checkout] Order #{order.id} is pending online payment (amount_to_pay={amount_to_pay}). WATI WhatsApp notification deferred until payment success.")
 
-                print(
-                    "ORDER WHATSAPP ERROR:",
-                    str(whatsapp_error)
-                )
-
             # -------------------------------------------------
             # Response
             # -------------------------------------------------
