@@ -3759,6 +3759,14 @@ def send_reorder_template(phone, customer_name, product_name, product_link):
 
 def send_order_whatsapp(customer, order):
 
+    # ------------------------------------------
+    # SUCCESS CHECK: Only send for successful/confirmed orders
+    # ------------------------------------------
+    order_status = str(getattr(order, 'status', '')).strip().lower()
+    if order_status in ['failed', 'cancelled', 'canceled', 'rejected']:
+        print(f"[send_order_whatsapp] Skipped: Order #{getattr(order, 'id', 'N/A')} status is '{order_status}' (Failed/Cancelled).")
+        return False
+
     mobile = str(customer.mobile).strip()
 
     if mobile.startswith("+91"):
@@ -3783,7 +3791,7 @@ def send_order_whatsapp(customer, order):
         "Accept": "application/json",
     }
 
-    template_name = getattr(settings, "WATI_ORDER_PLACED_TEMPLATE_NAME", "dharani_order_placed")
+    template_name = getattr(settings, "WATI_ORDER_PLACED_TEMPLATE_NAME", "dharani_order_placed_en")
 
     payload = {
         "template_name": template_name,
@@ -3799,6 +3807,18 @@ def send_order_whatsapp(customer, order):
             },
             {
                 "name": "total_amount",
+                "value": str(order.total_amount)
+            },
+            {
+                "name": "1",
+                "value": customer.name or "Customer"
+            },
+            {
+                "name": "2",
+                "value": str(order.id)
+            },
+            {
+                "name": "3",
                 "value": str(order.total_amount)
             }
         ]
@@ -6175,59 +6195,54 @@ def checkout(request):
 
             # =================================================
             # ORDER WHATSAPP + EMAIL NOTIFICATION
+            # ONLY SEND IF ORDER IS SUCCESSFUL / CONFIRMED
             # =================================================
 
-            message = f"""வணக்கம் {user.name},
+            user_pay_method = str(data.get('payment_method', '')).strip().lower()
+            if amount_to_pay <= 0 or user_pay_method in ['cod', 'cash on delivery', 'credit']:
+                order.status = 'confirmed'
+                order.save(update_fields=['status'])
 
-உங்கள் ஆர்டர் வெற்றிகரமாக பதிவு செய்யப்பட்டுள்ளது.
+            if order.status in ['confirmed', 'success', 'completed']:
+                # English order message for email and notifications
+                message = f"""Dear {user.name or 'Customer'},
 
-ஆர்டர் எண்: #{order.id}
+Your order has been placed successfully.
 
-பொருள் தொகை: ₹{order.product_amount}
-Shipping: ₹{order.shipping_charges}
+Order Number: #{order.id}
+Product Amount: ₹{order.product_amount}
+Shipping Charges: ₹{order.shipping_charges}
+Total Amount: ₹{order.total_amount}
 
-மொத்த தொகை: ₹{order.total_amount}
+Thank you for choosing Dharani Herbbals!
+Dharani Herbbals 💚"""
 
-நன்றி,
-தாரணி ஹெர்பல்ஸ்"""
+                # -------------------------------------------------
+                # Email
+                # -------------------------------------------------
+                try:
+                    create_and_send_notification(
+                        user,
+                        'email',
+                        f'Order Placed Successfully #{order.id} - Dharani Herbbals 💚',
+                        message
+                    )
+                except Exception as email_error:
+                    print("ORDER EMAIL ERROR:", str(email_error))
 
-            # -------------------------------------------------
-            # Email
-            # -------------------------------------------------
-
-            try:
-
-                create_and_send_notification(
-                    user,
-                    'email',
-                    'ஆர்டர் உறுதி செய்யப்பட்டது',
-                    message
-                )
-
-            except Exception as email_error:
-
-                print(
-                    "ORDER EMAIL ERROR:",
-                    str(email_error)
-                )
-
-            # -------------------------------------------------
-            # WhatsApp
-            # -------------------------------------------------
-
-            try:
-
-                whatsapp_result = send_order_whatsapp(
-                    user,
-                    order
-                )
-
-                print(
-                    "ORDER WHATSAPP RESULT:",
-                    whatsapp_result
-                )
-
-            except Exception as whatsapp_error:
+                # -------------------------------------------------
+                # WhatsApp (WATI)
+                # -------------------------------------------------
+                try:
+                    whatsapp_result = send_order_whatsapp(
+                        user,
+                        order
+                    )
+                    print("ORDER WHATSAPP RESULT:", whatsapp_result)
+                except Exception as whatsapp_error:
+                    print("ORDER WHATSAPP ERROR:", str(whatsapp_error))
+            else:
+                print(f"[checkout] Order #{order.id} is pending online payment (amount_to_pay={amount_to_pay}). WATI WhatsApp notification deferred until payment success.")
 
                 print(
                     "ORDER WHATSAPP ERROR:",
@@ -11623,6 +11638,11 @@ def paytm_callback(request):
                     ]
                 )
 
+                try:
+                    send_order_whatsapp(order.customer, order)
+                except Exception as werr:
+                    print("ORDER WHATSAPP ERROR in paytm_callback:", str(werr))
+
             # =============================================
             # SHOW SUCCESS PAGE
             #
@@ -11670,6 +11690,10 @@ def paytm_callback(request):
         payment.status = "failed"
 
         payment.save()
+
+        if payment.order:
+            payment.order.status = "failed"
+            payment.order.save(update_fields=["status"])
 
         # =================================================
         # SHOW FAILED PAGE
@@ -14697,15 +14721,31 @@ def payglocal_callback(request):
 
                 order = payment.order
 
-                order.status = "confirmed"
+                if order:
+                    order.status = "confirmed"
+                    order.save(update_fields=["status"])
+                    print(
+                        "ORDER STATUS UPDATED:",
+                        order.id,
+                        "confirmed",
+                    )
+                    try:
+                        send_order_whatsapp(order.customer, order)
+                    except Exception as werr:
+                        print("ORDER WHATSAPP ERROR in payglocal_callback:", str(werr))
 
-                order.save()
+            elif payment.status == "failed":
 
-                print(
-                    "ORDER STATUS UPDATED:",
-                    order.id,
-                    "confirmed",
-                )
+                order = payment.order
+
+                if order:
+                    order.status = "failed"
+                    order.save(update_fields=["status"])
+                    print(
+                        "ORDER STATUS UPDATED:",
+                        order.id,
+                        "failed",
+                    )
 
         else:
 

@@ -31,8 +31,8 @@ WATI_API_TOKEN = os.getenv(
 )
 
 # WhatsApp Order Placed Template
-WATI_ORDER_PLACED_TEMPLATE_ID = "6ad274a51a7a62edb55f5e2e"
-WATI_ORDER_PLACED_TEMPLATE_NAME = "dharani_order_placed"
+WATI_ORDER_PLACED_TEMPLATE_ID = "6b03fbe4f97aafdfa6258e51"
+WATI_ORDER_PLACED_TEMPLATE_NAME = "dharani_order_placed_en"
 
 # ==========================================
 # WATI DEBUG
